@@ -1,0 +1,220 @@
+/* CourtFlex design tokens — "Night session", refreshed 2026-11-05 (PLAN.md §2A).
+   Deep navy surfaces, white court lines for structure, and the logo's two
+   colors: ball gold for the one action that matters and for what's yours,
+   field green for what's confirmed, paid or active. */
+@import "@fontsource-variable/inter";
+
+@theme {
+  --color-court-deep: #001321;
+  --color-court-surface: #07233a;
+  --color-court-raised: #12395a;
+  --color-court-outer: #1e4d45;
+  --color-court-outer-bright: #2e7366;
+  --color-line: #e9eef4;
+  --color-line-dim: #97a8bf;
+  --color-line-faint: #1d4466;
+  --color-ball: #fcbf0e;
+  --color-ball-ink: #001321;
+  --color-signal-red: #ff6b5b;
+  /* Orange, so warnings never look like the gold buttons. */
+  --color-signal-amber: #ff9440;
+
+  --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
+  /* Gold, one step lighter, for hover on gold buttons. */
+  --color-ball-bright: #ffd23f;
+  /* The logo's green: confirmed, paid, active, done. */
+  --color-field: #00d29a;
+
+  /* Type scale (1.25 ratio) */
+  --text-xs: 0.8rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5625rem;
+  --text-2xl: 1.953rem;
+  --text-3xl: 2.441rem;
+  --text-4xl: 3.052rem;
+
+  /* Small parts (slots, inputs) get a soft corner; cards and sheets a large one.
+     Buttons, tags and chips are pills (rounded-full). */
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    background: var(--color-court-deep);
+    color: var(--color-line);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    line-height: 1.5;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ball);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--color-ball);
+    color: var(--color-ball-ink);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Display headings: Inter at its heaviest, set tight. */
+@utility font-expanded {
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+/* Times, prices and scores: tabular figures so columns line up. */
+@utility font-condensed {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+/* Court line: the structural divider. */
+@utility court-line {
+  border-color: var(--color-line-faint);
+}
+
+/* ── Motion ────────────────────────────────────────────────────────────
+   One easing curve everywhere, so everything moves the same way: quick
+   to start, soft to settle. Reduced motion turns all of it off (above). */
+:root {
+  --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+/* Anchored sections stop below the sticky header. */
+html {
+  scroll-padding-top: 5rem;
+}
+
+/* A new page settles in: a short fade and rise. */
+@keyframes cf-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+.page-enter {
+  animation: cf-page-in 420ms var(--ease-out-soft) both;
+}
+
+/* Landing sections ease in once as they scroll into view (see Reveal). */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 800ms var(--ease-out-soft),
+    transform 800ms var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal[data-shown] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The hero's first lines arrive one after another. */
+@keyframes cf-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+.rise {
+  animation: cf-rise 760ms var(--ease-out-soft) both;
+  animation-delay: var(--rise-delay, 0ms);
+}
+
+/* Brand loader: the logo with a sweep in the logo's green and gold. */
+@keyframes cf-sweep {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(260%);
+  }
+}
+.cf-loader-bar {
+  position: relative;
+  width: 10rem;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-court-raised);
+}
+.cf-loader-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-field), var(--color-ball));
+  animation: cf-sweep 1.15s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+}
+@keyframes cf-logo-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+.cf-loader-logo {
+  animation: cf-logo-in 700ms var(--ease-out-soft) both;
+}
+
+/* Loading placeholders shimmer instead of blinking. */
+@keyframes cf-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+.cf-shimmer {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-court-raised) 30%,
+    color-mix(in oklab, var(--color-court-raised), white 7%) 50%,
+    var(--color-court-raised) 70%
+  );
+  background-size: 200% 100%;
+  animation: cf-shimmer 1.6s linear infinite;
+}
+
+/* Touch-sized links: on phones and tablets a small text link gets a 44px-tall
+   tap area without changing how it looks. Laptops keep the compact layout. */
+@utility tap {
+  @media (width < 64rem) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+}

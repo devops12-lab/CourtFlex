@@ -1,0 +1,19 @@
+{
+  "name": "@courtflex/mocks",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@courtflex/api": "workspace:^",
+    "msw": "^3.0.3"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

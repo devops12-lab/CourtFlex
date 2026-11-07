@@ -1,0 +1,15 @@
+# Store text files with LF in the repository, whatever the checkout platform.
+* text=auto eol=lf
+
+# Keep binaries untouched.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+
+# Lockfile is generated; don't let diffs get noisy.
+pnpm-lock.yaml linguist-generated=true
